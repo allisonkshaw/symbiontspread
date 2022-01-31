@@ -1,7 +1,8 @@
-clear all
 % model written by Allison Shaw (contact for assistance: ashaw@umn.edu)
-%   last updated: 21 March 2021
-% takes ~45 minutes to run
+%   last updated: 13 January 2022
+% takes ~5 hours to run
+
+clear all
 
 %-----PARAMETERS----------------------------------------------------------%
     tau1 = 0.5;   % fraction of year to run transmission for
@@ -10,14 +11,15 @@ clear all
     b = 1;          % density-dependence parameter
     v_U = 0.25;     % dispersal variance of unpartnered hosts
     ngens = 150;    % number of generations
-    ttype = 1;  % transmission: density-dependent (0) or frequency-dependent (1)
     cmax = 1-surv_U-0.05; % maximum change in survival that is bioloically feasible
     nvec = linspace(-cmax,cmax,21); % net effect of symbiont (n<1 parasite, n>1 mutualist)
-%-----PARAMETERS----------------------------------------------------------%
+    %-----PARAMETERS----------------------------------------------------------%
 
-betavec = [2 1 0.5];    % transmission rate (density-dependent) [per ind per year]
+betavec = fliplr(linspace(0.5,2.5,21));    % transmission rate (density-dependent) [per ind per year]
 a = 0;       % Allee threshold
 v_P = v_U;   % dispersal variance of partnered hosts
+h = []; % half-saturating constant for type II transmission
+ttype = 1;  % transmission: density-dependent (0) or frequency-dependent (1) or type II function (2)
 
 for ii = 1:length(betavec)
     beta = betavec(ii);    % transmission rate (density-dependent) [per ind per year]
@@ -34,7 +36,7 @@ for ii = 1:length(betavec)
             surv_P = surv_U;
             phi_P = phi_U + n;
         end
-        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
+        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
         speed_FD1(ii,i) = speed_inst(end);
         
         % FECUNDITY COST
@@ -46,7 +48,7 @@ for ii = 1:length(betavec)
             surv_P = surv_U;
             phi_P = phi_U + n;
         end
-        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
+        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
         speed_FD2(ii,i) = speed_inst(end);
         
     end
@@ -62,14 +64,15 @@ clear all
     b = 1;        % density-dependence parameter
     v_U = 0.25;   % dispersal variance of unpartnered hosts
     ngens = 150;  % number of generations
-    ttype = 1;    % transmission: density-dependent (0) or frequency-dependent (1)
     cmax = 1-surv_U-0.05; % maximum change in survival that is bioloically feasible
     nvec = linspace(-cmax,cmax,21); % net effect of symbiont (n<1 parasite, n>1 mutualist)
 %-----PARAMETERS----------------------------------------------------------%
 
 beta = 2;    % transmission rate (density-dependent) [per ind per year]
 a = 0;          % Allee threshold
-vivec = [1 0.5 0.1]*v_U;   % dispersal variance of infecteds
+vivec = fliplr(linspace(0.1,1,19))*v_U;   % dispersal variance of infecteds
+h = []; % half-saturating constant for type II transmission
+ttype = 1;  % transmission: density-dependent (0) or frequency-dependent (1) or type II function (2)
 
 for ii = 1:length(vivec)
     v_P = vivec(ii);  % dispersal variance of infecteds
@@ -87,7 +90,7 @@ for ii = 1:length(vivec)
             surv_P = surv_U;
             phi_P = phi_U + n;
         end
-        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
+        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
         speed_FD1(ii,i) = speed_inst(end);
         
         % FECUNDITY COST
@@ -99,7 +102,7 @@ for ii = 1:length(vivec)
             surv_P = surv_U;
             phi_P = phi_U + n;
         end
-        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
+        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
         speed_FD2(ii,i) = speed_inst(end);
         
     end
@@ -116,14 +119,15 @@ clear all
     b = 1;        % density-dependence parameter
     v_U = 0.25;   % dispersal variance of unpartnered hosts
     ngens = 150;  % number of generations
-    ttype = 0;    % transmission: density-dependent (0) or frequency-dependent (1)
     cmax = 1-surv_U-0.05; % maximum change in survival that is bioloically feasible
     nvec = linspace(-cmax,cmax,21); % net effect of symbiont (n<1 parasite, n>1 mutualist)
 %-----PARAMETERS----------------------------------------------------------%
 
 beta = 2;    % transmission rate (density-dependent) [per ind per year]
-avec = [0 0.05 0.1];    % allee threshold
+avec = linspace(0,1,21);    % allee threshold
 v_P = v_U;  % dispersal variance of infecteds
+h = []; % half-saturating constant for type II transmission
+ttype = 0;  % transmission: density-dependent (0) or frequency-dependent (1) or type II function (2)
 
 for ii = 1:length(avec)
     a = avec(ii)    % allee threshold
@@ -140,7 +144,7 @@ for ii = 1:length(avec)
             surv_P = surv_U;
             phi_P = phi_U + n;
         end
-        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
+        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
         speed_DD1(ii,i) = speed_inst(end);
         
         % FECUNDITY COST
@@ -152,7 +156,7 @@ for ii = 1:length(avec)
             surv_P = surv_U;
             phi_P = phi_U + n;
         end
-        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
+        [~,~,~,speed_inst,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
         speed_DD2(ii,i) = speed_inst(end);
         
     end

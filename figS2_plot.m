@@ -1,6 +1,6 @@
 clear all; close all
 % model written by Allison Shaw (contact for assistance: ashaw@umn.edu)
-%   last updated: 11 January 2022
+%   last updated: 24 January 2022
 
 %-----PARAMETERS----------------------------------------------------------%
     beta = 2;    % transmission rate (density-dependent) [per ind per year]
@@ -13,7 +13,7 @@ clear all; close all
     v_P = 0.25;     % dispersal variance of partnered hosts
     ngens = 150;    % number of generations
     stype = 1; % whether symbiont affects survival (1) or fecundity (2)
-    h = []; % half-saturating constant for type II transmission
+    ttype = 2;  % transmission: density-dependent (0) or frequency-dependent (1) or type II function (2)
 %-----PARAMETERS----------------------------------------------------------%
 
 cmax = 1-surv_U-0.05; % maximum change in survival that is bioloically feasible
@@ -28,12 +28,13 @@ elseif stype == 2 % symbiont affects fecundity (2)
     phi_P = phi_U + n;
 end
 
-ttype = 0;  % transmission: density-dependent (0) or frequency-dependent (1) or type II function (2)
-[x_DD,U_DD,P_DD,~,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
-ttype = 1;  % transmission: density-dependent (0) or frequency-dependent (1) or type II function (2)
-[x_FD,U_FD,P_FD,~,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
 
-%%
+h = 0.1; % half-saturating constant for type II transmission
+[x_h1,U_h1,P_h1,~,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
+h = 1; % half-saturating constant for type II transmission
+[x_h2,U_h2,P_h2,~,~,~] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P);
+
+
 ncrit = 0.001
 
 fs1 = 10;  % axes labels
@@ -65,59 +66,57 @@ set(hh,'PaperUnits','centimeters');
 set(hh,'Units','centimeters');
 set(gcf,'Position',[xpos ypos width height])
 
-xmax = 40;
+xmax = 50;
 ind = [100 50 1];
 
 for i = 1:length(ind)
     axes('position',[sx sy+(i-1)*(dy+he) w he])
     hold on
-    plot(x_DD,U_DD(ind(i),:),'color',g1,'LineWidth',lw1);
-    plot(x_DD,P_DD(ind(i),:),'color',g3,'LineWidth',lw1);
+    plot(x_h1,U_h1(ind(i),:),'color',g1,'LineWidth',lw1);
+    plot(x_h1,P_h1(ind(i),:),'color',g3,'LineWidth',lw1);
     box on
     xlim([-xmax xmax])
     if i < 3
-        N_DD = U_DD(ind(i),:)+P_DD(ind(i),:);
-        xvals = x_DD(N_DD>ncrit & P_DD(ind(i),:)<ncrit);
+        N_h1 = U_h1(ind(i),:)+P_h1(ind(i),:);
+        xvals = x_h1(N_h1>ncrit & P_h1(ind(i),:)<ncrit);
         xvals_neg = xvals(xvals<0);
         xvals_pos = xvals(xvals>0);
-        h=fill([xvals_neg fliplr(xvals_neg)],[zeros(size(xvals_neg)) 1.18*ones(size(xvals_neg))],g4); set(h,'EdgeColor','none')
-        h=fill([xvals_pos fliplr(xvals_pos)],[zeros(size(xvals_pos)) 1.18*ones(size(xvals_pos))],g4); set(h,'EdgeColor','none')
+        h=fill([xvals_neg fliplr(xvals_neg)],[zeros(size(xvals_neg)) 1.48*ones(size(xvals_neg))],g4); set(h,'EdgeColor','none')
+        h=fill([xvals_pos fliplr(xvals_pos)],[zeros(size(xvals_pos)) 1.48*ones(size(xvals_pos))],g4); set(h,'EdgeColor','none')
         clear xvals*
         %
-        plot(x_DD,U_DD(ind(i),:),'color',g1,'LineWidth',lw1);
-        plot(x_DD,P_DD(ind(i),:),'color',g3,'LineWidth',lw1);
+        plot(x_h1,U_h1(ind(i),:),'color',g1,'LineWidth',lw1);
+        plot(x_h1,P_h1(ind(i),:),'color',g3,'LineWidth',lw1);
 
-        ylim([0 1.2])
-        text(38, 1.05,strcat(['t=' num2str(ind(i))]),'horizontalalignment','right')
-        set(gca,'YTick',[0 0.4 0.8 1.2])
+        ylim([0 1.5])
+        text(48, 1.35,strcat(['t=' num2str(ind(i))]),'horizontalalignment','right')
     else
-        text(38, 5.5,strcat(['t=' num2str(ind(i))]),'horizontalalignment','right')
+        text(48, 5.5,strcat(['t=' num2str(ind(i))]),'horizontalalignment','right')
         legend('U','P','location','NorthWest')
     end
     set(gca,'FontSize',fs3,'LineWidth',lw2,'Fontname', 'Arial');
     
     axes('position',[sx+dx+w sy+(i-1)*(dy+he) w he])
     hold on
-    plot(x_FD,U_FD(ind(i),:),'color',g1,'LineWidth',lw1);
-    plot(x_FD,P_FD(ind(i),:),'color',g3,'LineWidth',lw1);
+    plot(x_h2,U_h2(ind(i),:),'color',g1,'LineWidth',lw1);
+    plot(x_h2,P_h2(ind(i),:),'color',g3,'LineWidth',lw1);
     box on
     xlim([-xmax xmax])
     if i < 3
-        N_FD = U_FD(ind(i),:)+P_FD(ind(i),:);
-        xvals = x_FD(N_FD>ncrit & P_FD(ind(i),:)<ncrit);
+        N_h2 = U_h2(ind(i),:)+P_h2(ind(i),:);
+        xvals = x_h2(N_h2>ncrit & P_h2(ind(i),:)<ncrit);
         xvals_neg = xvals(xvals<0);
         xvals_pos = xvals(xvals>0);
-        h=fill([xvals_neg fliplr(xvals_neg)],[zeros(size(xvals_neg)) 1.18*ones(size(xvals_neg))],g4); set(h,'EdgeColor','none')
-        h=fill([xvals_pos fliplr(xvals_pos)],[zeros(size(xvals_pos)) 1.18*ones(size(xvals_pos))],g4); set(h,'EdgeColor','none')
+        h=fill([xvals_neg fliplr(xvals_neg)],[zeros(size(xvals_neg)) 1.48*ones(size(xvals_neg))],g4); set(h,'EdgeColor','none')
+        h=fill([xvals_pos fliplr(xvals_pos)],[zeros(size(xvals_pos)) 1.48*ones(size(xvals_pos))],g4); set(h,'EdgeColor','none')
         clear xvals*
         %
-        plot(x_FD,U_FD(ind(i),:),'color',g1,'LineWidth',lw1);
-        plot(x_FD,P_FD(ind(i),:),'color',g3,'LineWidth',lw1);
-        ylim([0 1.2])
-        text(37, 1.05,strcat(['t=' num2str(ind(i))]),'horizontalalignment','right')
-        set(gca,'YTick',[0 0.4 0.8 1.2])
+        plot(x_h2,U_h2(ind(i),:),'color',g1,'LineWidth',lw1);
+        plot(x_h2,P_h2(ind(i),:),'color',g3,'LineWidth',lw1);
+        ylim([0 1.5])
+        text(47, 1.35,strcat(['t=' num2str(ind(i))]),'horizontalalignment','right')
     else
-        text(37, 5.5,strcat(['t=' num2str(ind(i))]),'horizontalalignment','right')
+        text(47, 5.5,strcat(['t=' num2str(ind(i))]),'horizontalalignment','right')
     end
     set(gca,'FontSize',fs3,'LineWidth',lw2,'Fontname', 'Arial');
 end
@@ -135,7 +134,6 @@ hold on
      text(0.06+dx+w,sy+2*he+1*dy,'d)','horizontalalignment','center')
      text(0.06,     sy+he,'e)','horizontalalignment','center')
      text(0.06+dx+w,sy+he,'f)','horizontalalignment','center')
-     text(0.15,     sy+he-0.02,'\it halo','horizontalalignment','center','FontSize',fs4)
      set(gca,'FontSize',fs3,'Fontname', 'Arial');
 axis([0 1 0 1])
 
@@ -154,7 +152,7 @@ set(hh,'PaperSize',position(3:4));
 
 %saveas(1,strcat(['fig3.jpg']))
 %print -dpdf -r600 Figure_3.pdf
-print -djpeg -r600 fig2.jpg
+print -djpeg -r600 figS2.jpg
 
 % Restore the previous settings
 set(hh,'PaperType',prePaperType);

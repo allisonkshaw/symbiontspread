@@ -1,17 +1,18 @@
-function [x,U,P,speed_inst,popedge,popedge_P] = run_simulation(ngens,ttype,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P)
-% USAGE: [x,U,P,speed_inst,popedge,popedge_P] = run_simulation(ngens,ttype,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P)
+function [x,U,P,speed_inst,popedge,popedge_P] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P)
+% USAGE: [x,U,P,speed_inst,popedge,popedge_P] = run_simulation(ngens,ttype,h,beta,tau1,surv_U,surv_P,phi_U,phi_P,a,b,v_U,v_P)
 %
 % model written by Allison Shaw (contact for assistance: ashaw@umn.edu)
 %   started:      31 July 2019
-%   last updated: 21 March 2021
+%   last updated: 18 January 2022
 %
 % Simulates a host population with unpartnered (U) and partnered (P)
 %   individuals that is spreading out across space.
 %
 % INPUTS:
 % ngens = number of generations
-% ttype = transmission: density-dependent (0) or frequency-dependent (1)
+% ttype = transmission: density-dependent (0), frequency-dependent (1), or type II transmission (2)
 % beta = transmission rate (density-dependent) [per ind per gen]
+% h = half-saturation constant for type II transmission
 % tau1 = fraction of year to run transmission for
 % surv_U = survival probability of unpartnered hosts
 % surv_P = survival probability of partnered hosts
@@ -32,7 +33,7 @@ function [x,U,P,speed_inst,popedge,popedge_P] = run_simulation(ngens,ttype,beta,
 % popedge_P = x location of the right-most edge of the furthest P for
 %        each gen
 
-eps1 = 1e-15;    % threshold for a 'zero' population density
+eps1 = 1e-12;    % threshold for a 'zero' population density
 ncrit = 0.001;   % threshold for the edge of the population
 
 nodes = (2^15)+1;      % number of nodes/bins to have in the domain (2^m + 1)
@@ -76,7 +77,7 @@ for i = 1:ngens
     Utrim = U0(ind);
     Ptrim = P0(ind);
     % get U and P analytically
-    [Uout,Pout] = do_transmission_ana(tau1,Utrim,Ptrim,beta,ttype);
+    [Uout,Pout] = do_transmission_ana(tau1,Utrim,Ptrim,beta,ttype,h);
     % plug these transmission outputs back into the full pop context
     U1 = U0; U1(ind) = Uout;
     P1 = P0; P1(ind) = Pout;

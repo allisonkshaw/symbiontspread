@@ -1,6 +1,6 @@
 close all
 % model written by Allison Shaw (contact for assistance: ashaw@umn.edu)
-%   last updated: 21 March 2021
+%   last updated: 12 January 2022
 
 fs1 = 10;  % axes labels
 fs3 = 09;  % axis numbering
@@ -32,13 +32,14 @@ set(gcf,'Position',[xpos ypos width height])
 
 %%
 load fig4_beta.mat
+ind = [6 16 21];
 axes('position',[sx sy+2*dy+2*he w he])
-    i=1;plot(nvec,speed_FD2(i,:),'.','color',g1,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(1);plot(nvec,speed_FD2(i,:),'.','color',g1,'LineWidth',lw1,'MarkerSize',msize)
     hold on
-    i=2;plot(nvec,speed_FD2(i,:),'.','color',g3,'LineWidth',lw1,'MarkerSize',msize)
-    i=3;plot(nvec,speed_FD2(i,:),'.','color',g2,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(2);plot(nvec,speed_FD2(i,:),'.','color',g3,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(3);plot(nvec,speed_FD2(i,:),'.','color',g2,'LineWidth',lw1,'MarkerSize',msize)
     line([0 0],[0.2 0.6],'color','k','LineWidth',lw2)
-    legend(num2str(betavec(1)),num2str(betavec(2)),num2str(betavec(3)),'Location','NorthWest')
+    legend(num2str(betavec(ind(1))),num2str(betavec(ind(2))),num2str(betavec(ind(3))),'Location','NorthWest')
     text(-0.15,0.22,'parasite','HorizontalAlignment','center','FontSize',fs3)
     text( 0.15,0.22,'mutualist','HorizontalAlignment','center','FontSize',fs3)
     axis([-0.3 0.3 0.2 0.52])
@@ -46,10 +47,10 @@ axes('position',[sx sy+2*dy+2*he w he])
     set(gca,'FontSize',fs3,'LineWidth',lw2,'Fontname', 'Arial');
 
 axes('position',[sx+dx+w      sy+2*dy+2*he w he])
-    i=1;plot(nvec,speed_FD1(i,:),'.','color',g1,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(1);plot(nvec,speed_FD1(i,:),'.','color',g1,'LineWidth',lw1,'MarkerSize',msize)
     hold on
-    i=2;plot(nvec,speed_FD1(i,:),'.','color',g3,'LineWidth',lw1,'MarkerSize',msize)
-    i=3;plot(nvec,speed_FD1(i,:),'.','color',g2,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(2);plot(nvec,speed_FD1(i,:),'.','color',g3,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(3);plot(nvec,speed_FD1(i,:),'.','color',g2,'LineWidth',lw1,'MarkerSize',msize)
     line([0 0],[0.2 0.6],'color','k','LineWidth',lw2)
     text(-0.15,0.22,'parasite','HorizontalAlignment','center','FontSize',fs3)
     text( 0.15,0.22,'mutualist','HorizontalAlignment','center','FontSize',fs3)
@@ -59,13 +60,14 @@ axes('position',[sx+dx+w      sy+2*dy+2*he w he])
 
 %%
 load fig4_v.mat
+ind = [1 11 19];
 axes('position',[sx      sy+dy+he w he])
-    i=1;plot(nvec,speed_FD2(i,:),'.','color',g1,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(1);plot(nvec,speed_FD2(i,:),'.','color',g1,'LineWidth',lw1,'MarkerSize',msize)
     hold on
-    i=2;plot(nvec,speed_FD2(i,:),'.','color',g3,'LineWidth',lw1,'MarkerSize',msize)
-    i=3;plot(nvec,speed_FD2(i,:),'.','color',g2,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(2);plot(nvec,speed_FD2(i,:),'.','color',g3,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(3);plot(nvec,speed_FD2(i,:),'.','color',g2,'LineWidth',lw1,'MarkerSize',msize)
     line([0 0],[0.2 0.6],'color','k','LineWidth',lw2)
-    legend(num2str(vivec(1)),num2str(vivec(2)),num2str(vivec(3)),'Location','NorthWest')
+    legend(num2str(vivec(ind(1))),num2str(vivec(ind(2))),num2str(vivec(ind(3))),'Location','NorthWest')
     text(-0.15,0.22,'parasite','HorizontalAlignment','center','FontSize',fs3)
     text( 0.15,0.22,'mutualist','HorizontalAlignment','center','FontSize',fs3)
     axis([-0.3 0.3 0.2 0.52])
@@ -73,10 +75,10 @@ axes('position',[sx      sy+dy+he w he])
     set(gca,'FontSize',fs3,'LineWidth',lw2,'Fontname', 'Arial');
 
 axes('position',[sx+dx+w sy+dy+he w he])
-    i=1;plot(nvec,speed_FD1(i,:),'.','color',g1,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(1);plot(nvec,speed_FD1(i,:),'.','color',g1,'LineWidth',lw1,'MarkerSize',msize)
     hold on
-    i=2;plot(nvec,speed_FD1(i,:),'.','color',g3,'LineWidth',lw1,'MarkerSize',msize)
-    i=3;plot(nvec,speed_FD1(i,:),'.','color',g2,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(2);plot(nvec,speed_FD1(i,:),'.','color',g3,'LineWidth',lw1,'MarkerSize',msize)
+    i=ind(3);plot(nvec,speed_FD1(i,:),'.','color',g2,'LineWidth',lw1,'MarkerSize',msize)
     line([0 0],[0.2 0.6],'color','k','LineWidth',lw2)
     text(-0.15,0.22,'parasite','HorizontalAlignment','center','FontSize',fs3)
     text( 0.15,0.22,'mutualist','HorizontalAlignment','center','FontSize',fs3)
@@ -87,13 +89,14 @@ axes('position',[sx+dx+w sy+dy+he w he])
 
 %%
 load fig4_AE.mat
+ind = [1 2 3];
 axes('position',[sx      sy w he])
-    i=1;plot(nvec,speed_DD2(i,:),'o','color',g1,'LineWidth',lw1)
+    i=ind(1);plot(nvec,speed_DD2(i,:),'o','color',g1,'LineWidth',lw1)
     hold on
-    i=2;plot(nvec,speed_DD2(i,:),'o','color',g3,'LineWidth',lw1)
-    i=3;plot(nvec,speed_DD2(i,:),'o','color',g2,'LineWidth',lw1)
+    i=ind(2);plot(nvec,speed_DD2(i,:),'o','color',g3,'LineWidth',lw1)
+    i=ind(3);plot(nvec,speed_DD2(i,:),'o','color',g2,'LineWidth',lw1)
     line([0 0],[0 0.4],'color','k','LineWidth',lw2)
-    legend(num2str(avec(1)),num2str(avec(2)),num2str(avec(3)),'position',[0.125 0.195 0.1340 0.0829])
+    legend(num2str(avec(ind(1))),num2str(avec(ind(2))),num2str(avec(ind(3))),'position',[0.125 0.195 0.1340 0.0829])
     text(-0.12,0.03,'parasite','HorizontalAlignment','center','FontSize',fs3)
     text( 0.12,0.03,'mutualist','HorizontalAlignment','center','FontSize',fs3)
     axis([-0.3 0.3 0 0.4])
@@ -101,10 +104,10 @@ axes('position',[sx      sy w he])
     set(gca,'FontSize',fs3,'LineWidth',lw2,'Fontname', 'Arial');
     
 axes('position',[sx+dx+w sy w he])
-    i=1;plot(nvec,speed_DD1(i,:),'o','color',g1,'LineWidth',lw1)
+    i=ind(1);plot(nvec,speed_DD1(i,:),'o','color',g1,'LineWidth',lw1)
     hold on
-    i=2;plot(nvec,speed_DD1(i,:),'o','color',g3,'LineWidth',lw1)
-    i=3;plot(nvec,speed_DD1(i,:),'o','color',g2,'LineWidth',lw1)
+    i=ind(2);plot(nvec,speed_DD1(i,:),'o','color',g3,'LineWidth',lw1)
+    i=ind(3);plot(nvec,speed_DD1(i,:),'o','color',g2,'LineWidth',lw1)
     line([0 0],[0 0.4],'color','k','LineWidth',lw2)
     text(-0.15,0.03,'parasite','HorizontalAlignment','center','FontSize',fs3)
     text( 0.15,0.03,'mutualist','HorizontalAlignment','center','FontSize',fs3)
